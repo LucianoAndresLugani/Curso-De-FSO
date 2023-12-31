@@ -1,62 +1,82 @@
 import { useState } from 'react'
-const Display = props => <div><span>{props.op}</span><p>{props.value}</p></div>
+
+
+const Button = (props) => (
+  <button onClick={props.handleClick}>
+    {props.text}
+  </button>
+)
+
+const StatisticLine = (props) => (
+  <tr>
+    <td> {props.text} </td>
+    <td> {props.value} {props.text2} </td>
+  </tr>
+)
+
+const Statistics = (props) => {
+  const { good, neutral, bad } = props
+  const total = good + neutral + bad
+
+  if (total === 0) {
+    return (
+      <p>
+        No feedback given
+      </p>
+    )
+  }
+
+  const average = (((good * 1) + (neutral * 0) + (bad * (-1))) / total).toFixed(1);
+  const positive = ((good / total) * 100).toFixed(1);
+
+  return (
+    <div>
+      
+          <StatisticLine text="good" value={good} />
+          <StatisticLine text="neutral" value={neutral} />
+          <StatisticLine text="bad" value={bad} />
+          <StatisticLine text="all" value={total} />
+          <StatisticLine text="average" value={average} />
+          <StatisticLine text="positive" value={positive} text2="%" />
+        
+    </div>
+  )
+}
+
+
 
 const App = () => {
   // guarda los clics de cada botón en su propio estado
   const [good, setGood] = useState(0);
   const [neutral, setNeutral] = useState(0);
   const [bad, setBad] = useState(0);
-  const [all, setAll]= useState(0);
-  const [average, setAverage]= useState(0)
-  const [positive, setPositive]= useState(0);
+ 
 
-  const setToGood = (newValue) => {
-    setAll(all+1);
-    setToAverage();
-    setToPositive();
-    setGood(newValue)
-  }
-  const setToNeutral = (newValue) => {
-    setAll(all+1)
-    setToAverage();
-    setToPositive();
-    setNeutral(newValue);
-  }
-  const setToBad = (newValue) => {
-    setAll(all+1);
-    setToPositive();
-    setToAverage();
-    setBad(newValue);
-  }
-  const setToAverage = () => {
-    let avg = (good - bad)/all;
-    setAverage(avg);
-  }
-  const setToPositive=()=> {
-    let pos = (100*good)/all;
-    setPositive(pos);
-  }
+  const setToGood = () => {
 
+    setGood(good +1)
+    console.log("this is good",good);
+  }
+  const setToNeutral = () => {
+   
+    setNeutral(neutral + 1);
+    console.log("this is neutral",neutral);
+  }
+  const setToBad = () => {
+    
+    setBad(bad + 1 );
+    console.log("this is bad",bad);
+  }
+  
 
   return (
     <div>
-       <h1>Give Feedback</h1>
-      <button onClick={() => setToGood(good + 1)}>
-        GOOD
-      </button>
-      <button onClick={() => setToNeutral(neutral + 1)}>
-        NEUTRAL
-      </button>
-      <button onClick={() => setToBad(bad + 1)}>
-        BAD
-      </button>
-      <h1>Stadistics</h1>
-      <Display value={good} op={"GOOD"}>Good</Display>
-      <Display value={neutral} op={"NEUTRAL"}>Neutral</Display>
-      <Display value={bad} op={"BAD"}>Bad</Display>
-      <Display value={all} op={"ALL"}>ALL</Display>
-      <Display value={average} op={"AVERAGE"}>Average</Display>
-      <Display value={positive+"%"} op={"POSOTIVE"}>Average</Display>
+      <h1>Give Feedback</h1>
+      <Button handleClick={setToGood} text="GOOD" />
+      <Button handleClick={setToNeutral} text="NEUTRAL" />
+      <Button handleClick={setToBad} text="BAD"/>
+      <h1> Statistics: </h1>
+      <Statistics good={good} neutral={neutral} bad={bad} />
     </div>
   )
 }
