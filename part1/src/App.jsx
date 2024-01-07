@@ -1,27 +1,42 @@
-import { useState } from 'react'
+import React from 'react'
 
 
-const App = () => {
-  const [value, setValue] = useState(10)
+const notes = [
+  {
+    id: 1,
+    content: 'HTML is easy',
+    date: '2019-05-30T17:30:31.098Z',
+    important: true,
+  },
+  {
+    id: 2,
+    content: 'Browser can execute only JavaScript',
+    date: '2019-05-30T18:39:34.091Z',
+    important: false,
+  },
+  {
+    id: 3,
+    content: 'GET and POST are the most important methods of HTTP protocol',
+    date: '2019-05-30T19:20:14.298Z',
+    important: true,
+  },
+]
 
-  const setToValue = (newValue) => {
-    console.log('value now', newValue)
-    setValue(newValue)
-  }
+const App = props => {
+  const { notes } = props
 
   return (
     <div>
-      {value}
-      <button onClick={() => setToValue(1000)}>
-        thousand
-      </button>
-      <button onClick={() => setToValue(0)}>
-        reset
-      </button>
-      <button onClick={() => setToValue(value + 1)}>
-        increment
-      </button>
+      <h1>Notes</h1>
+      <ul>
+        <li>{notes[0].content}</li>
+        <li>{notes[1].content}</li>
+        <li>{notes[2].content}</li>
+      </ul>
     </div>
   )
 }
+
+
+
 export default App
