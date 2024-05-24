@@ -1,107 +1,63 @@
-import { useState } from "react";
-const Title = ({ text }) => {
-  return (
-    <>
-      <h1>{text}</h1>
-    </>
-  );
-};
+import { useState } from 'react'
+import imgUrl from './'
+const Button = (props) => (
+  <button onClick={props.handleClick}>
+    {props.text}
+  </button>
+)
 
-const Boton = (props) => {
-  return <button onClick={props.handleClick}>{props.text}</button>;
-};
 
-const StatisticsLine = ({ text, value }) => {
-  return (
-    <>
-      <table>
-        <tr>
-          <th>{text}</th>
-        </tr>
-
-        <td>{value}</td>
-      </table>
-    </>
-  );
-};
-const Statistics = ({
-  good,
-  neutral,
-  bad,
-  allFeedbacks,
-  avgPoints,
-  positiveFeedbacks,
-}) => {
-  if (allFeedbacks === 0) {
-    return (
-      <div>
-        <p>No feedback given</p>
-      </div>
-    );
-  }
-  return (
-    <>
-      <StatisticsLine text={"good"} value={good}></StatisticsLine>
-      <StatisticsLine text={"neutral"} value={neutral}></StatisticsLine>
-      <StatisticsLine text={"bad"} value={bad}></StatisticsLine>
-      <StatisticsLine text={"average"} value={avgPoints}></StatisticsLine>
-      <StatisticsLine text={"all"} value={allFeedbacks}></StatisticsLine>
-      <StatisticsLine
-        text={"positive"}
-        value={positiveFeedbacks}
-      ></StatisticsLine>
-    </>
-  );
-};
 
 const App = () => {
-  // guarda los clics de cada botón en su propio estado
-  const [good, setGood] = useState(0);
-  const [neutral, setNeutral] = useState(0);
-  const [bad, setBad] = useState(0);
-  const [feedbackCount, setFeedbackCount] = useState([]);
+  const anecdotes = [
+    'If it hurts, do it more often.',
+    'Adding manpower to a late software project makes it later!',
+    'The first 90 percent of the code accounts for the first 10 percent of the development time...The remaining 10 percent of the code accounts for the other 90 percent of the development time.',
+    'Any fool can write code that a computer can understand. Good programmers write code that humans can understand.',
+    'Premature optimization is the root of all evil.',
+    'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.',
+    'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients.',
+    'The only way to go fast, is to go well.'
+  ]
 
-  const clickGood = () => {
-    setGood(good + 1);
-    setFeedbackCount(feedbackCount.concat(1));
-  };
+  const [selected, setSelected] = useState(0)
+  const [votes, setVotes]= useState(new Uint8Array(anecdotes.length));
 
-  const clickNeutral = () => {
-    setNeutral(neutral + 1);
-    setFeedbackCount(feedbackCount.concat(0));
-  };
+  const setToNextSelected = () => {
+    setSelected(Math.floor(Math.random() * anecdotes.length))
+  }
 
-  const clickBad = () => {
-    setBad(bad + 1);
-    setFeedbackCount(feedbackCount.concat(-1));
-  };
+  const addVoteForQuote = (selected) => {
+    const copy = [...votes]
+    copy[selected] += 1
+    setVotes(copy)
+  }
+  
+  const voteQuote = () => {
+    addVoteForQuote(selected)
+  }
 
-  const allFeedbacks = good + neutral + bad;
+  const biggestVote = Math.max(...votes)
 
-  let totalScore = 0;
-  feedbackCount.forEach((value) => (totalScore += value));
-  const avgPoints = totalScore / feedbackCount.length;
-
-  const positiveFeedbacks = (good / allFeedbacks) * 100;
+  // finds the index of biggest vote in the list 'votes'
+  // if several quotes have the same biggest number of votes
+  // then the smallest index is returned 
+  // when using indexOf (the first occurrence)
+  const findIndex = votes.indexOf(biggestVote)
+  
 
   return (
     <div>
-      <Title text={"give feedback"}></Title>
-      <Boton handleClick={clickGood} text="GOOD"></Boton>
-      <Boton handleClick={clickNeutral} text="NEUTRAL"></Boton>
-      <Boton handleClick={clickBad} text="bad"></Boton>
-      <Title text={"statistics"}></Title>
-      <Statistics
-        good={good}
-        neutral={neutral}
-        bad={bad}
-        allFeedbacks={allFeedbacks}
-        avgPoints={avgPoints}
-        positiveFeedbacks={positiveFeedbacks}
-        feedbackCount={feedbackCount}
-      ></Statistics>
-    </div>
-  );
-};
 
-export default App;
+
+      <h1>Anecdote of the day</h1>
+      <p> {anecdotes[selected]} </p>
+     <Button handleClick = {setToNextSelected} text="Next Anecdote" />
+     <Button handleClick = {voteQuote} text="Votes"/>
+      <h2>Anecdote with most votes</h2>
+      <p>{anecdotes[findIndex]}</p>
+    </div>
+  )
+}
+
+export default App
