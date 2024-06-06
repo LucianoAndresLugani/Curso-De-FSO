@@ -6,9 +6,13 @@ const Button = (props) => (
   </button>
 )
 
+const Display = props => <div>{props.value}</div>
+
+
 
 
 const App = () => {
+
   const anecdotes = [
     'If it hurts, do it more often.',
     'Adding manpower to a late software project makes it later!',
@@ -21,39 +25,29 @@ const App = () => {
   ]
 
   const [selected, setSelected] = useState(0)
-  const [votes, setVotes]= useState(new Uint8Array(anecdotes.length));
 
-  const setToNextSelected = () => {
-    setSelected(Math.floor(Math.random() * anecdotes.length))
-  }
-
-  const addVoteForQuote = (selected) => {
-    const copy = [...votes]
-    copy[selected] += 1
-    setVotes(copy)
-  }
+  const [points, setPoints] = useState(new Array(anecdotes.length).fill(0));
   
-  const voteQuote = () => {
-    addVoteForQuote(selected)
+  const setToValue = () => {
+    const random = Math.floor(Math.random() * 7);
+    console.log('value now', random)
+    setSelected(random)
   }
+  const addVote = () => {
+    const pointsCopy = [...points];
+    pointsCopy[selected] += 1;
+    setPoints(pointsCopy);
+  };
 
-  const biggestVote = Math.max(...votes)
-
-  // finds the index of biggest vote in the list 'votes'
-  // if several quotes have the same biggest number of votes
-  // then the smallest index is returned 
-  // when using indexOf (the first occurrence)
-  const findIndex = votes.indexOf(biggestVote)
-  
+  const bestAnecdoteIndex = points.indexOf(Math.max(...points));
 
   return (
     <div>
-      <h1>Anecdote of the day</h1>
-      <p> {anecdotes[selected]} </p>
-     <Button handleClick = {setToNextSelected} text="Next Anecdote" />
-     <Button handleClick = {voteQuote} text="Votes"/>
-      <h2>Anecdote with most votes</h2>
-      <p>{anecdotes[findIndex]}</p>
+      <Display value= {anecdotes[selected]} ></Display>
+      <Button handleClick={() => addVote()} text="vote" />
+      <Button handleClick={() => setToValue()} text="nextAnecdota"></Button>
+      <Display value={anecdotes[bestAnecdoteIndex]}></Display>
+      <div>has {points[bestAnecdoteIndex]} votes</div>
     </div>
   )
 }

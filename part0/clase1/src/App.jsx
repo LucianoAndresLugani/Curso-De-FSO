@@ -1,34 +1,43 @@
-import { useState } from "react";
+import { useState } from 'react'
 
 
 const App = () => {
-  const [clicks, setClicks] = useState({
-    left: 0, right: 0
-  })
+  const [ counter, setCounter ] = useState(0)
 
-  const handleLeftClick = () => {
-    const newClicks = {
-      left: clicks.left + 1,
-      right: clicks.right
-    }
-    setClicks(newClicks)
+
+  const increaseByOne = () => setCounter(counter + 1)
+  const decreaseByOne = () => setCounter(counter - 1)
+  const setToZero = () => setCounter(0)
+  const Button = (props) => {
+    return (
+      <button onClick={props.onClick}>
+        {props.text}
+      </button>
+    )
+  }
+  const Display = (props) => {
+    return (
+      <div>{props.counter}</div>
+    )
   }
 
-  const handleRightClick = () => {
-    const newClicks = {
-      left: clicks.left,
-      right: clicks.right + 1
-    }
-    setClicks(newClicks)
-  }
 
   return (
     <div>
-      {clicks.left}
-      <button onClick={handleLeftClick}>left</button>
-      <button onClick={handleRightClick}>right</button>
-      {clicks.right}
+      <Display counter={counter}/>
+      <Button
+        onClick={increaseByOne}
+        text='PLUS'
+      />
+      <Button
+        onClick={setToZero}
+        text='ZERO'
+      />    
+      <Button
+        onClick={decreaseByOne}
+        text='MINUS'
+      />          
     </div>
   )
 }
-  export default App;
+export default App;
